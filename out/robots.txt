@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://aleemak.com
+Sitemap: https://aleemak.com/sitemap.xml

@@ -15,12 +15,8 @@ export const metadata: Metadata = {
   alternates: { canonical: '/contact' },
 }
 
-export default async function ContactPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ service?: string }>
-}) {
-  const { service } = await searchParams
+export default function ContactPage() {
+  const service = undefined
   const wa = whatsappLink(service)
 
   const details = [
