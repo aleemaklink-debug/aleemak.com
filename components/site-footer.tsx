@@ -113,12 +113,20 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-primary-foreground/10 pt-6 text-sm text-primary-foreground/50 sm:flex-row sm:items-center">
-          <p>© 2026 ALEEMAK. All rights reserved.</p>
+          <p>Â© 2026 ALEEMAK. All rights reserved.</p>
           <p className="font-display tracking-widest text-primary-foreground/40">
             BUSINESS. DIGITAL. POSTAL.
           </p>
         </div>
       </div>
-    </footer>
+              <div className="mt-8 border-t border-primary-foreground/10 pt-5 text-center">
+            <a
+              href="/admin/login"
+              className="text-xs text-primary-foreground/50 transition hover:text-primary-foreground/90"
+            >
+              Admin Login
+            </a>
+          </div>
+        </footer>
   )
 }
