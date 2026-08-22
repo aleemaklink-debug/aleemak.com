@@ -31,41 +31,60 @@ export function EnquiryForm({
 }) {
   const [submitted, setSubmitted] = useState(false)
   const [service, setService] = useState(defaultService ?? '')
+  const [saving, setSaving] = useState(false)
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+
     const form = e.currentTarget
-    const data = Object.fromEntries(new FormData(form).entries()) as Record<
-      string,
-      string
-    >
 
-    // --- Backend integration point -----------------------------------------
-    // When a backend/CRM is ready, POST the enquiry here, e.g.:
-    //   await fetch('/api/enquiry', { method: 'POST', body: JSON.stringify(data) })
-    // For now we hand the lead off to WhatsApp when a number is configured.
-    if (site.whatsappNumber) {
-      const message =
-        `New enquiry for ALEEMAK%0A%0A` +
-        `Name: ${data.fullName || '-'}%0A` +
-        `Mobile: ${data.mobile || '-'}%0A` +
-        `Business: ${data.businessName || '-'}%0A` +
-        `Business Type: ${data.businessType || '-'}%0A` +
-        `Status: ${data.status || '-'}%0A` +
-        `Service: ${data.service || '-'}%0A` +
-        `Location: ${data.location || '-'}%0A` +
-        `Message: ${data.message || '-'}`
-      window.open(
-        `https://wa.me/${site.whatsappNumber}?text=${message}`,
-        '_blank',
-        'noopener,noreferrer',
-      )
+    const data = Object.fromEntries(
+      new FormData(form).entries(),
+    ) as Record<string, string>
+
+    setSaving(true)
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to save enquiry')
+      }
+
+      if (site.whatsappNumber) {
+        const message =
+          `New enquiry for ALEEMAK\n\n` +
+          `Name: ${data.fullName || '-'}\n` +
+          `Mobile: ${data.mobile || '-'}\n` +
+          `Business: ${data.businessName || '-'}\n` +
+          `Business Type: ${data.businessType || '-'}\n` +
+          `Status: ${data.status || '-'}\n` +
+          `Service: ${data.service || '-'}\n` +
+          `Location: ${data.location || '-'}\n` +
+          `Message: ${data.message || '-'}`
+
+        window.open(
+          `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(message)}`,
+          '_blank',
+          'noopener,noreferrer',
+        )
+      }
+
+      setSubmitted(true)
+      form.reset()
+      setService('')
+    } catch (error) {
+      console.error('ENQUIRY SUBMIT ERROR:', error)
+      alert('Unable to save your enquiry. Please try again.')
+    } finally {
+      setSaving(false)
     }
-    // ------------------------------------------------------------------------
-
-    setSubmitted(true)
-    form.reset()
-    setService('')
   }
 
   if (submitted) {
@@ -79,12 +98,16 @@ export function EnquiryForm({
         <span className="flex size-14 items-center justify-center rounded-full bg-gold/15 text-gold">
           <CheckCircle2 className="size-8" />
         </span>
+
         <h3 className="font-display text-xl font-semibold text-foreground">
           Thank you.
         </h3>
+
         <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-          ALEEMAK will review your requirement and contact you.
+          Your enquiry has been saved. ALEEMAK will review your requirement
+          and contact you.
         </p>
+
         <button
           type="button"
           onClick={() => setSubmitted(false)}
@@ -118,6 +141,7 @@ export function EnquiryForm({
             placeholder="Your name"
           />
         </div>
+
         <div>
           <label htmlFor="mobile" className={labelClass}>
             Mobile Number
@@ -133,6 +157,7 @@ export function EnquiryForm({
             placeholder="10-digit mobile number"
           />
         </div>
+
         <div>
           <label htmlFor="businessName" className={labelClass}>
             Business Name
@@ -144,6 +169,7 @@ export function EnquiryForm({
             placeholder="Optional"
           />
         </div>
+
         <div>
           <label htmlFor="businessType" className={labelClass}>
             Business Type
@@ -155,14 +181,21 @@ export function EnquiryForm({
             placeholder="e.g. Garments, Trading, Services"
           />
         </div>
+
         <div>
           <label htmlFor="status" className={labelClass}>
             New / Existing Business
           </label>
-          <select id="status" name="status" defaultValue="" className={fieldClass}>
+          <select
+            id="status"
+            name="status"
+            defaultValue=""
+            className={fieldClass}
+          >
             <option value="" disabled>
               Select
             </option>
+
             {businessStatus.map((s) => (
               <option key={s} value={s}>
                 {s}
@@ -170,10 +203,12 @@ export function EnquiryForm({
             ))}
           </select>
         </div>
+
         <div>
           <label htmlFor="service" className={labelClass}>
             Service Required
           </label>
+
           <select
             id="service"
             name="service"
@@ -184,6 +219,7 @@ export function EnquiryForm({
             <option value="" disabled>
               Select a service
             </option>
+
             {serviceOptions.map((s) => (
               <option key={s} value={s}>
                 {s}
@@ -191,10 +227,12 @@ export function EnquiryForm({
             ))}
           </select>
         </div>
+
         <div className="sm:col-span-2">
           <label htmlFor="location" className={labelClass}>
             Location
           </label>
+
           <input
             id="location"
             name="location"
@@ -202,10 +240,12 @@ export function EnquiryForm({
             placeholder="City / area"
           />
         </div>
+
         <div className="sm:col-span-2">
           <label htmlFor="message" className={labelClass}>
             Message
           </label>
+
           <textarea
             id="message"
             name="message"
@@ -218,10 +258,12 @@ export function EnquiryForm({
 
       <button
         type="submit"
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:w-auto"
+        disabled={saving}
+        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
-        Send Enquiry
+        {saving ? 'Saving...' : 'Send Enquiry'}
       </button>
+
       <p className="mt-3 text-xs text-muted-foreground">
         We use your details only to respond to your enquiry.
       </p>

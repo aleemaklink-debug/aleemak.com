@@ -7,12 +7,17 @@ type RevealProps = {
   children: ReactNode
   as?: ElementType
   className?: string
-  /** stagger delay in ms */
   delay?: number
   id?: string
 }
 
-export function Reveal({ children, as, className, delay = 0, id }: RevealProps) {
+export function Reveal({
+  children,
+  as,
+  className,
+  delay = 0,
+  id,
+}: RevealProps) {
   const Comp = (as ?? 'div') as ElementType
   const ref = useRef<HTMLElement | null>(null)
   const [visible, setVisible] = useState(false)
@@ -20,27 +25,19 @@ export function Reveal({ children, as, className, delay = 0, id }: RevealProps) 
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisible(true)
-            observer.unobserve(entry.target)
-          }
-        })
-      },
-      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' },
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
+
+    // Make the content visible immediately.
+    // We are disabling the intersection-based hiding temporarily
+    // so we can verify the services layout and database rendering.
+    setVisible(true)
   }, [])
 
   return (
     <Comp
       ref={ref}
       id={id}
-      className={cn('reveal', visible && 'is-visible', className)}
-      style={{ transitionDelay: visible ? `${delay}ms` : '0ms' }}
+      className={className}
+      style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
     </Comp>

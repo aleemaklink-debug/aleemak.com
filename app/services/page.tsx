@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/page-header'
 import { Container } from '@/components/section'
 import { Reveal } from '@/components/reveal'
 import { CtaBand } from '@/components/home/sections'
-import { services } from '@/lib/services'
+import { getServices } from '@/lib/services'
 
 export const metadata: Metadata = {
   title: 'Services',
@@ -14,8 +14,12 @@ export const metadata: Metadata = {
   alternates: { canonical: '/services' },
 }
 
-export default function ServicesPage() {
-  return (
+export default async function ServicesPage() {
+  const services = await getServices()
+
+  console.log('SERVICES COUNT:', services.length)
+
+  return(
     <>
       <PageHeader
         eyebrow="Our Services"
