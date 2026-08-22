@@ -72,6 +72,19 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
+          <Link
+            href="/customer/login"
+            className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+          >
+            Login
+          </Link>
+
+          <Link
+            href="/customer/register"
+            className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            Create Account
+          </Link>
           <CtaLink href="/contact" variant="primary" withArrow>
             Get Business Support
           </CtaLink>
@@ -119,6 +132,19 @@ export function SiteHeader() {
             )
           })}
           <div className="mt-3 flex flex-col gap-2">
+            <Link
+              href="/customer/login"
+              className="w-full rounded-xl border border-border px-4 py-3 text-center text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+            >
+              Customer Login
+            </Link>
+
+            <Link
+              href="/customer/register"
+              className="w-full rounded-xl bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+            >
+              Create Account
+            </Link>
             <CtaLink href="/contact" variant="primary" withArrow className="w-full">
               Get Business Support
             </CtaLink>

@@ -19,8 +19,17 @@ const nodes = [
 
 export function HeroVisual() {
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-md">
-      {/* concentric rings */}
+    <div className="relative mx-auto aspect-square w-full max-w-md overflow-hidden">
+  {/* subtle ALEEMAK watermark */}
+  <div
+    aria-hidden="true"
+    className="pointer-events-none absolute inset-0 flex items-center justify-center"
+  >
+    <span className="select-none font-display text-[clamp(5rem,16vw,10rem)] font-bold tracking-[0.12em] text-foreground/[0.025]">
+      ALEEMAK
+    </span>
+  </div>
+        {/* concentric rings */}
       <div className="absolute inset-0 rounded-full border border-border/70" />
       <div className="absolute inset-[12%] rounded-full border border-border/60" />
       <div className="absolute inset-[24%] rounded-full border border-dashed border-border/50" />

@@ -14,7 +14,7 @@ export function Logo({
   return (
     <Link
       href="/"
-      aria-label="ALEEMAK — home"
+      aria-label="ALEEMAK â€” home"
       className={cn('flex items-center gap-2.5', className)}
     >
       <Image
@@ -23,13 +23,13 @@ export function Logo({
         width={120}
         height={108}
         priority
-        className="h-11 w-auto object-contain"
+        className="h-14 w-auto object-contain sm:h-16"
       />
       {showWordmark && (
         <span className="flex flex-col leading-none">
           <span
             className={cn(
-              'font-display text-lg font-bold tracking-[0.14em]',
+              'font-display text-xl font-bold tracking-[0.14em]',
               invert ? 'text-primary-foreground' : 'text-foreground',
             )}
           >
